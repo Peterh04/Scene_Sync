@@ -1,0 +1,57 @@
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  height: 100vh;
+  width: 100%;
+
+  padding: 10px 10px 80px 20px;
+
+  background-image: url("img_flowers.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.login-page > h2 {
+  margin-bottom: 10px;
+}
+.input-wrapper {
+  display: flex;
+
+  background-color: var(--clr-primary-header);
+}
+
+.login-form {
+  padding: 0px 10px;
+}
+
+.btn-password-toggle {
+  position: relative;
+  max-height: 13px;
+
+  padding: 10px;
+
+  background-color: transparent;
+}
+
+.btn-password-toggle > .eye {
+  position: absolute;
+
+  right: -5px;
+}
+
+.btn-password-toggle:hover {
+  background-color: transparent;
+}
+
+.btn-password-toggle > img :hover {
+  background-color: transparent;
+}
+
+.login-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--clr-primary-text);
+}

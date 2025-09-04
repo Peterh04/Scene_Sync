@@ -1,0 +1,104 @@
+.signPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  height: 100vh;
+  width: 100%;
+
+  padding: 10px 10px 80px 10px;
+
+  background-image: url("img_flowers.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.signPage > .auth-buttons {
+  display: flex;
+  flex-direction: column;
+
+  gap: 25px;
+
+  padding: 30px 20px;
+
+  width: 100%;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.auth-buttons > button {
+  padding: 10px;
+
+  width: 95%;
+  max-height: 200px;
+}
+
+.continue-section > .auth-divider {
+  position: relative;
+
+  text-align: center;
+
+  margin: 20px 0;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+
+  position: absolute;
+  top: 50%;
+
+  height: 1px;
+  background-color: var(--clr-primary-text);
+  width: 40%;
+}
+
+.auth-divider::before {
+  left: 20px;
+}
+
+.auth-divider::after {
+  right: 20px;
+}
+
+.continue-section > .continue-actions {
+  display: flex;
+  flex-direction: column;
+
+  gap: 25px;
+
+  padding: 30px 20px;
+
+  width: 100;
+  margin-left: -10px;
+  margin-right: -10px;
+}
+
+.continue-actions > button {
+  display: flex;
+  align-items: center;
+
+  padding: 10px;
+
+  width: 95%;
+  max-height: 200px;
+}
+
+.continue-actions > button > .fa {
+  margin-right: 10px;
+  margin-left: 10px;
+
+  font-size: 1rem;
+}
+
+.signPage > p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--clr-primary-text);
+}
+
+.Sign-up-link {
+  color: #ffffff;
+}
