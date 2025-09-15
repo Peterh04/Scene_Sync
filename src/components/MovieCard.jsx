@@ -1,15 +1,14 @@
 export default function MovieCard({
-  imgSrc = "https://m.media-amazon.com/images/M/MV5BYTdmZTA1ODMtMWFkYy00ZTVhLThiNDAtODYwMDBlMzhhMjhiXkEyXkFqcGc@._V1_.jpg",
+  imgSrc = "https://www.google.com/search?q=movie+images&rlz=1C5CHFA_enKE1161KE1161&oq=movie+image&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIGCAUQRRg8MgYIBhBFGDwyBggHEEUYPNIBCTE2NTAwajBqN6gCALACAA&sourceid=chrome&ie=UTF-8#vhid=cwDXy-RNvAP9hM&vssid=_W9DHaNXFOeqZ-d8Pku_l2QU_44",
   title,
-  duration,
+  click,
 }) {
   return (
-    <div className="individual-show-preview">
+    <div className="individual-show-preview" onClick={click}>
       <div className="individual-show-preview-image">
         <img src={imgSrc}></img>
       </div>
       <h5 className="show-title">{title}</h5>
-      <h5 className="show-duration">{duration}</h5>
     </div>
   );
 }

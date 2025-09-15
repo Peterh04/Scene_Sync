@@ -7,33 +7,29 @@ import bell from "../assets/icons/bell.png";
 import { useState } from "react";
 import MovieCard from "../components/MovieCard";
 import MovieCardL from "../components/MovieCardL";
+import generatePoster from "../utils/generatePoster";
 
-export default function Home() {
+export default function Home({ resources, upcomingResoures }) {
   const [searchActive, setSearchActive] = useState(false);
 
   return (
     <main aria-label="Home" className="home-page">
       <header className="profile-primary-header" role="header">
-        <div className="user-profile-section">
-          {!searchActive && (
-            <>
-              <div className="profile-img">
-                <img src={passwordImage} alt="profile image" />
-              </div>
-              <div className="user-welcome">
-                <p className="welcome-message" aria-label="welcome">
-                  Welcome back,
-                </p>
-                <h4>William Krisna</h4>
-              </div>
-            </>
-          )}
+        <div
+          className={`user-profile-section ${searchActive ? "disabled" : ""}`}
+        >
+          <div className="profile-img">
+            <img src={passwordImage} alt="profile image" />
+          </div>
+          <div className="user-welcome">
+            <p className="welcome-message" aria-label="welcome">
+              Welcome back,
+            </p>
+            <h4>William Krisna</h4>
+          </div>
         </div>
         <div className="header-actions">
-          <form
-            aria-label="search"
-            className={`header-search ${searchActive ? "active" : ""}`}
-          >
+          <form aria-label="search" className="header-search">
             <div className="input-wrapper">
               <FontAwesomeIcon icon={faMagnifyingGlass} className="fa" />
               <input
@@ -72,34 +68,23 @@ export default function Home() {
       <section role="latest shows" className="latest-shows">
         <header className="section-header">
           <h3 aria-label="latest shows" className="section-title">
-            Latest movies
+            Latest
           </h3>
           <p aria-label="see all">See all</p>
         </header>
 
         <div className="show-previews">
-          <MovieCard
-            imgSrc="https://m.media-amazon.com/images/M/MV5BYTdmZTA1ODMtMWFkYy00ZTVhLThiNDAtODYwMDBlMzhhMjhiXkEyXkFqcGc@._V1_.jpg"
-            duration={"2h 49mm"}
-            title={"John Wick Chapter 4"}
-          />
-
-          <MovieCard
-            imgSrc="https://m.media-amazon.com/images/M/MV5BYTdmZTA1ODMtMWFkYy00ZTVhLThiNDAtODYwMDBlMzhhMjhiXkEyXkFqcGc@._V1_.jpg"
-            duration={"2h 49mm"}
-            title={"John Wick"}
-          />
-
-          <MovieCard
-            imgSrc="https://m.media-amazon.com/images/M/MV5BYTdmZTA1ODMtMWFkYy00ZTVhLThiNDAtODYwMDBlMzhhMjhiXkEyXkFqcGc@._V1_.jpg"
-            duration={"2h 49mm"}
-            title={"John Wick Chapter 4"}
-          />
-          <MovieCard
-            imgSrc="https://m.media-amazon.com/images/M/MV5BYTdmZTA1ODMtMWFkYy00ZTVhLThiNDAtODYwMDBlMzhhMjhiXkEyXkFqcGc@._V1_.jpg"
-            duration={"2h 49mm"}
-            title={"John Wick Chapter 4"}
-          />
+          {resources.map((resource) => (
+            <MovieCard
+              key={resource.id}
+              title={resource.title}
+              imgSrc={
+                resource.poster
+                  ? generatePoster(resource.poster)
+                  : "https://img.freepik.com/premium-photo/flying-popcorn-3d-glasses-film-reel-clapboard-blue-background-3d-render-illustration_989822-1043.jpg?semt=ais_hybrid&w=740"
+              }
+            />
+          ))}
         </div>
       </section>
 
@@ -111,9 +96,19 @@ export default function Home() {
         </header>
 
         <div className="show-previews">
-          <MovieCardL />
-          <MovieCardL />
-          <MovieCardL />
+          {upcomingResoures.map((upcomingResoure) => (
+            <MovieCardL
+              key={upcomingResoure.id}
+              imageSrc={
+                upcomingResoure.poster
+                  ? generatePoster(upcomingResoure.poster)
+                  : "https://img.freepik.com/premium-photo/flying-popcorn-3d-glasses-film-reel-clapboard-blue-background-3d-render-illustration_989822-1043.jpg?semt=ais_hybrid&w=740"
+              }
+              title={upcomingResoure.title}
+              genre={upcomingResoure.genre}
+              releaseDate={upcomingResoure.date}
+            />
+          ))}
         </div>
       </section>
 
