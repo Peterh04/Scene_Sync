@@ -1,7 +1,7 @@
 import "../styles/home.css";
 import passwordImage from "../assets/password.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import bell from "../assets/icons/bell.png";
 
 import { useState } from "react";
@@ -19,7 +19,7 @@ export default function Home({ resources, upcomingResoures }) {
           className={`user-profile-section ${searchActive ? "disabled" : ""}`}
         >
           <div className="profile-img">
-            <img src={passwordImage} alt="profile image" />
+            <img src={passwordImage} alt="profile image" loading="lazy" />
           </div>
           <div className="user-welcome">
             <p className="welcome-message" aria-label="welcome">
@@ -78,6 +78,8 @@ export default function Home({ resources, upcomingResoures }) {
             <MovieCard
               key={resource.id}
               title={resource.title}
+              resourceType={resource.type}
+              resourceId={resource.id}
               imgSrc={
                 resource.poster
                   ? generatePoster(resource.poster)

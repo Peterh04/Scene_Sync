@@ -8,10 +8,87 @@ import star from "../assets/icons/star.png";
 import play from "../assets/icons/play.png";
 import downArrow from "../assets/icons/down-arrow.png";
 import MovieCard from "../components/MovieCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import generatePoster from "../utils/generatePoster";
+import generateTimestamps from "../utils/generateTimestamps";
+import generateTrailer from "../utils/generateTrailer";
 
-export default function MoviePage() {
+export default function MoviePage({ genres }) {
+  const [resource, setResource] = useState([]);
+  const [resourceTrailer, setResourceTrailer] = useState([]);
+
+  const options = {
+    method: "GET",
+    headers: {
+      accept: "application/json",
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhODUwYWY0Mzc0MjU3N2QxMGUwOTA4MTM4YmUwYWRmNSIsIm5iZiI6MTc1NzIzMTU2OS4zMiwic3ViIjoiNjhiZDM5ZDE1Mzg1MDE0NTFiNGU1ZDkzIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.dKy_zn9FWtM_p8bGQzoxEl9jSR413i3ZHUbqEaKkpHA",
+    },
+  };
+
+  const getGenreName = (id, type) => {
+    const genre = genres.filter((genre) => genre.id === id);
+    return genre.length > 0 ? genre[0]?.name : `TBD (${type})`;
+  };
+
+  const { resourceType, resourceId } = useParams();
   const [isTrailerVisible, setIsTrailerVisible] = useState(false);
+
+  const url = `https://api.themoviedb.org/3/${resourceType}/${resourceId}`;
+  const videoUrl = `https://api.themoviedb.org/3/${resourceType}/${resourceId}/videos`;
+
+  useEffect(() => {
+    const fetchRsource = async () => {
+      try {
+        const response = await fetch(url, options);
+        if (response.ok) {
+          const data = await response.json();
+          const resourceData = {
+            id: data.id,
+            title: data.title,
+            date: data.release_date.split("-")[0],
+            rating: Math.floor(data.vote_average),
+            runtime: generateTimestamps(data.runtime),
+            poster: data.poster_path,
+            // genre: getGenreName(data.genre_ids?.[0], "Movie"),
+            overview: data.overview,
+          };
+
+          setResource(resourceData);
+
+          // console.log(resourceData.id);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchRsource();
+  }, [resourceId]);
+
+  useEffect(() => {
+    const fetchResourceVideo = async () => {
+      try {
+        const response = await fetch(videoUrl, options);
+
+        if (response.ok) {
+          const data = await response.json();
+          const resourceTrailerData = data.results.filter(
+            (trailer) => trailer.type === "Trailer"
+          );
+          const trailer = {
+            id: `${resourceId}`,
+            key: resourceTrailerData[0].key,
+          };
+          setResourceTrailer(trailer);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchResourceVideo();
+  }, [resourceId]);
 
   const handleTrailer = () => {
     setIsTrailerVisible((cond) => !cond);
@@ -19,15 +96,22 @@ export default function MoviePage() {
   return (
     <main aria-label="movie page" className="movie-page">
       <header role="header" className="movie-page-primary-header">
-        <button role="button" className="backBtn">
-          <img src={back} alt="back"></img>
-        </button>
+        <Link to={"/"}>
+          <button role="button" className="backBtn">
+            <img src={back} alt="back"></img>
+          </button>
+        </Link>
+
         <div className="header-actions">
           <button role="button" className="bookmarKBtn">
             <img src={bookmark} alt="bookmark"></img>
           </button>
 
-          <button role="button" className="shareBtn">
+          <button
+            role="button"
+            className="shareBtn"
+            onClick={() => console.log(resourceType)}
+          >
             <img src={share} alt="share"></img>
           </button>
         </div>
@@ -37,8 +121,8 @@ export default function MoviePage() {
         <div className="show-image-container">
           {isTrailerVisible ? (
             <iframe
-              src="https://www.youtube.com/embed/nb_fFj_0rq8"
-              frameborder="0"
+              src={`${generateTrailer(resourceTrailer.key)}?autoplay=1`}
+              frameBorder="0"
               allow="autoplay; encrypted-media"
               allowFullScreen
               className="show-image"
@@ -46,32 +130,40 @@ export default function MoviePage() {
             ></iframe>
           ) : (
             <img
-              src="https://wallpaper.forfun.com/fetch/4c/4caea87d8a186baa83735280328a1582.jpeg"
+              src={
+                resource.poster
+                  ? generatePoster(resource.poster)
+                  : "https://img.freepik.com/premium-photo/flying-popcorn-3d-glasses-film-reel-clapboard-blue-background-3d-render-illustration_989822-1043.jpg?semt=ais_hybrid&w=740"
+              }
               alt="show image"
               className="show-image"
               loading="lazy"
             />
           )}
         </div>
-        <div className="show-details">
-          <h3>Avatar: The Way of Water</h3>
-          <div className="film-metadata">
-            <p className="film-year">2022</p>
-            <div className="divider">|</div>
-            <p>
-              <img src={star} className="fa"></img>
-              <span className="film-rating">8</span>
-              /10
-            </p>
-            <div className="divider">|</div>
+        {!isTrailerVisible && (
+          <div className="show-details">
+            <h3>{resource.title}</h3>
+            <div className="film-metadata">
+              <p className="film-year">{resource.date}</p>
+              <div className="divider">|</div>
+              <p>
+                <img src={star} className="fa"></img>
+                <span className="film-rating">{resource.rating}</span>
+                /10
+              </p>
+              <div className="divider">|</div>
 
-            <p className="film-duration">3h 12min</p>
+              <p className="film-duration">
+                {resource.runtime !== "0min" ? resource.runtime : "-"}
+              </p>
+            </div>
+            <div className="film-genre">
+              <div>Sci-fi</div>
+              <div>Action</div>
+            </div>
           </div>
-          <div className="film-genre">
-            <div>Sci-fi</div>
-            <div>Action</div>
-          </div>
-        </div>
+        )}
       </div>
 
       <div className="show-actions">
@@ -87,11 +179,7 @@ export default function MoviePage() {
       <section role="storyline" className="storyline-section">
         <h4>Storyline</h4>
         <p className="film-storyline">
-          Contrary to popular belief, Lorem Ipsum is not simply random text. It
-          has roots in a piece of classical Latin literature from 45 BC, making
-          it over 2000 years old. Richard McClintock, a Latin professor at
-          Hampden-Sydney College in Virginia, looked up one of the more obscure
-          Latin words, consectetur...
+          {resource.overview ? resource.overview : "Sorry no overview for now!"}
         </p>
         <button>
           Read more

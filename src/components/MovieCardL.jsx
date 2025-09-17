@@ -7,12 +7,9 @@ export default function MovieCardL({
   releaseDate = "30 Aug 2024",
 }) {
   return (
-    <div
-      className="individual-show-preview-upcoming"
-      onClick={() => console.log(formattedDate)}
-    >
+    <div className="individual-show-preview-upcoming">
       <div className="individual-show-preview-image">
-        <img src={imageSrc} alt="show image"></img>
+        <img src={imageSrc} alt="show image" loading="lazy"></img>
       </div>
       <h4 className="show-title">{title}</h4>
 

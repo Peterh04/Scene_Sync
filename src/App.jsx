@@ -6,6 +6,7 @@ import MoviePage from "./pages/MoviePage";
 import ForgotPasswordPage from "./pages/PasswordPage";
 import RegisterPage from "./pages/RegisterPage";
 import SignPage from "./pages/SignPage";
+import { Route, Routes } from "react-router-dom";
 
 const options = {
   method: "GET",
@@ -70,6 +71,8 @@ function App() {
             poster: tv.poster_path,
           }))
           .slice(0, 10);
+
+        // console.log(movies);
 
         const combined = [...movies, ...shows].sort(
           (a, b) => new Date(b.date) - new Date(a.date)
@@ -166,7 +169,6 @@ function App() {
         );
 
         setUpcomingResources(combined);
-        console.log(shows);
       } catch (err) {
         console.log(err);
       }
@@ -176,7 +178,18 @@ function App() {
 
   return (
     <>
-      <Home resources={resources} upcomingResoures={upcomingResoures} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Home resources={resources} upcomingResoures={upcomingResoures} />
+          }
+        ></Route>
+        <Route
+          path="/:resourceType/:resourceId"
+          element={<MoviePage genres={genres} />}
+        ></Route>
+      </Routes>
     </>
   );
 }

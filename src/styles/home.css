@@ -253,7 +253,7 @@
   padding-top: 16px;
 }
 
-.show-previews > .individual-show-preview {
+.show-previews > .link-div > .individual-show-preview {
   display: flex;
   flex-direction: column;
 
