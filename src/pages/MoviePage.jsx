@@ -13,10 +13,22 @@ import { Link, useParams } from "react-router-dom";
 import generatePoster from "../utils/generatePoster";
 import generateTimestamps from "../utils/generateTimestamps";
 import generateTrailer from "../utils/generateTrailer";
+import sharePage from "../utils/share";
 
-export default function MoviePage({ genres }) {
+export default function MoviePage({
+  genres,
+  isTrailerVisible,
+  playTrailer,
+  closeTrailer,
+}) {
+  const { resourceType, resourceId } = useParams();
   const [resource, setResource] = useState([]);
   const [resourceTrailer, setResourceTrailer] = useState([]);
+  const [similarResource, setSimilarResource] = useState([]);
+
+  const url = `https://api.themoviedb.org/3/${resourceType}/${resourceId}`;
+  const videoUrl = `https://api.themoviedb.org/3/${resourceType}/${resourceId}/videos`;
+  const similarResourcesUrl = `https://api.themoviedb.org/3/${resourceType}/${resourceId}/similar`;
 
   const options = {
     method: "GET",
@@ -32,12 +44,6 @@ export default function MoviePage({ genres }) {
     return genre.length > 0 ? genre[0]?.name : `TBD (${type})`;
   };
 
-  const { resourceType, resourceId } = useParams();
-  const [isTrailerVisible, setIsTrailerVisible] = useState(false);
-
-  const url = `https://api.themoviedb.org/3/${resourceType}/${resourceId}`;
-  const videoUrl = `https://api.themoviedb.org/3/${resourceType}/${resourceId}/videos`;
-
   useEffect(() => {
     const fetchRsource = async () => {
       try {
@@ -46,18 +52,25 @@ export default function MoviePage({ genres }) {
           const data = await response.json();
           const resourceData = {
             id: data.id,
-            title: data.title,
-            date: data.release_date.split("-")[0],
+            title: data.title || data.name,
+            date: data.release_date
+              ? data.release_date.split("-")[0]
+              : data.first_air_date.split("-")[0],
             rating: Math.floor(data.vote_average),
-            runtime: generateTimestamps(data.runtime),
+            runtime:
+              data.runtime || data.runtime == 0
+                ? generateTimestamps(data.runtime)
+                : generateTimestamps(data.episode_run_time[0]),
             poster: data.poster_path,
-            // genre: getGenreName(data.genre_ids?.[0], "Movie"),
+
+            genre: data.genres.length > 0 ? data.genres : null,
             overview: data.overview,
           };
 
-          setResource(resourceData);
+          console.log(data);
+          console.log(resourceData);
 
-          // console.log(resourceData.id);
+          setResource(resourceData);
         }
       } catch (err) {
         console.log(err);
@@ -90,14 +103,42 @@ export default function MoviePage({ genres }) {
     fetchResourceVideo();
   }, [resourceId]);
 
-  const handleTrailer = () => {
-    setIsTrailerVisible((cond) => !cond);
-  };
+  useEffect(() => {
+    const fetchSimilarResources = async () => {
+      try {
+        const similarResourceResponse = await fetch(
+          similarResourcesUrl,
+          options
+        );
+
+        if (similarResourceResponse.ok) {
+          const similarResourceData = await similarResourceResponse.json();
+          const similar = similarResourceData.results.map((item) => ({
+            id: item.id,
+            type: resourceType,
+            title: item.name,
+            overview: item.overview,
+            date: item.release_date || item.first_air_date,
+            poster: item.poster_path,
+          }));
+          setSimilarResource(similar);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchSimilarResources();
+  }, [resourceId]);
+
   return (
     <main aria-label="movie page" className="movie-page">
       <header role="header" className="movie-page-primary-header">
         <Link to={"/"}>
-          <button role="button" className="backBtn">
+          <button
+            role="button"
+            className="backBtn"
+            onClick={() => closeTrailer()}
+          >
             <img src={back} alt="back"></img>
           </button>
         </Link>
@@ -107,11 +148,7 @@ export default function MoviePage({ genres }) {
             <img src={bookmark} alt="bookmark"></img>
           </button>
 
-          <button
-            role="button"
-            className="shareBtn"
-            onClick={() => console.log(resourceType)}
-          >
+          <button role="button" className="shareBtn">
             <img src={share} alt="share"></img>
           </button>
         </div>
@@ -158,20 +195,31 @@ export default function MoviePage({ genres }) {
                 {resource.runtime !== "0min" ? resource.runtime : "-"}
               </p>
             </div>
-            <div className="film-genre">
-              <div>Sci-fi</div>
-              <div>Action</div>
-            </div>
+
+            {resource.genre !== null && (
+              <div className="film-genre">
+                {resource.genre?.[0] && (
+                  <div onClick={() => console.log(resource.genre[0])}>
+                    {resource.genre?.[0].name}
+                  </div>
+                )}
+                {resource.genre?.[1] && (
+                  <div onClick={() => console.log(resource.genre[0])}>
+                    {resource.genre?.[1].name}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
       </div>
 
       <div className="show-actions">
-        <button onClick={handleTrailer}>
+        <button onClick={() => playTrailer()}>
           <img src={play} alt="play" className="fa"></img>
           Trailer
         </button>
-        <button>
+        <button onClick={() => share()}>
           <img src={shareBlack} className="fa"></img>
           Share
         </button>
@@ -190,29 +238,20 @@ export default function MoviePage({ genres }) {
       <section role="similar shows" className="similar-shows">
         <h4>More like this</h4>
         <div className="show-previews">
-          <MovieCard
-            imgSrc="https://m.media-amazon.com/images/M/MV5BYTdmZTA1ODMtMWFkYy00ZTVhLThiNDAtODYwMDBlMzhhMjhiXkEyXkFqcGc@._V1_.jpg"
-            duration={"2h 49mm"}
-            title={"John Wick Chapter 4"}
-          />
-
-          <MovieCard
-            imgSrc="https://m.media-amazon.com/images/M/MV5BYTdmZTA1ODMtMWFkYy00ZTVhLThiNDAtODYwMDBlMzhhMjhiXkEyXkFqcGc@._V1_.jpg"
-            duration={"2h 49mm"}
-            title={"John Wick Chapter 4"}
-          />
-
-          <MovieCard
-            imgSrc="https://m.media-amazon.com/images/M/MV5BYTdmZTA1ODMtMWFkYy00ZTVhLThiNDAtODYwMDBlMzhhMjhiXkEyXkFqcGc@._V1_.jpg"
-            duration={"2h 49mm"}
-            title={"John Wick Chapter 4"}
-          />
-
-          <MovieCard
-            imgSrc="https://m.media-amazon.com/images/M/MV5BYTdmZTA1ODMtMWFkYy00ZTVhLThiNDAtODYwMDBlMzhhMjhiXkEyXkFqcGc@._V1_.jpg"
-            duration={"2h 49mm"}
-            title={"John Wick Chapter 4"}
-          />
+          {similarResource.map((similarR) => (
+            <MovieCard
+              key={similarR.id}
+              imgSrc={
+                similarR.poster
+                  ? generatePoster(similarR.poster)
+                  : "https://img.freepik.com/premium-photo/flying-popcorn-3d-glasses-film-reel-clapboard-blue-background-3d-render-illustration_989822-1043.jpg?semt=ais_hybrid&w=740"
+              }
+              title={similarR.name}
+              resourceType={similarR.type}
+              resourceId={similarR.id}
+              click={() => closeTrailer()}
+            />
+          ))}
         </div>
       </section>
     </main>

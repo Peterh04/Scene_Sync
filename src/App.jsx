@@ -21,9 +21,17 @@ function App() {
   const [resources, setResources] = useState([]);
   const [upcomingResoures, setUpcomingResources] = useState([]);
   const [genres, setGenres] = useState([]);
+  const [isTrailerVisible, setIsTrailerVisible] = useState(false);
 
   const today = new Date().toISOString().split("T")[0];
 
+  const playTrailer = () => {
+    setIsTrailerVisible(true);
+  };
+
+  const closeTrailer = () => {
+    setIsTrailerVisible(false);
+  };
   const getGenreName = (id, type) => {
     const genre = genres.filter((genre) => genre.id === id);
     return genre.length > 0 ? genre[0]?.name : `TBD (${type})`;
@@ -71,8 +79,6 @@ function App() {
             poster: tv.poster_path,
           }))
           .slice(0, 10);
-
-        // console.log(movies);
 
         const combined = [...movies, ...shows].sort(
           (a, b) => new Date(b.date) - new Date(a.date)
@@ -187,7 +193,14 @@ function App() {
         ></Route>
         <Route
           path="/:resourceType/:resourceId"
-          element={<MoviePage genres={genres} />}
+          element={
+            <MoviePage
+              genres={genres}
+              isTrailerVisible={isTrailerVisible}
+              playTrailer={playTrailer}
+              closeTrailer={closeTrailer}
+            />
+          }
         ></Route>
       </Routes>
     </>
