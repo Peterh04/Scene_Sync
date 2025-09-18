@@ -39,11 +39,6 @@ export default function MoviePage({
     },
   };
 
-  const getGenreName = (id, type) => {
-    const genre = genres.filter((genre) => genre.id === id);
-    return genre.length > 0 ? genre[0]?.name : `TBD (${type})`;
-  };
-
   useEffect(() => {
     const fetchRsource = async () => {
       try {
@@ -53,9 +48,9 @@ export default function MoviePage({
           const resourceData = {
             id: data.id,
             title: data.title || data.name,
-            date: data.release_date
-              ? data.release_date.split("-")[0]
-              : data.first_air_date.split("-")[0],
+            // date: data.release_date || data.release_date !=""
+            //   ? data.release_date.split("-")[0]
+            //   : data.first_air_date.split("-")[0],
             rating: Math.floor(data.vote_average),
             runtime:
               data.runtime || data.runtime == 0
@@ -86,14 +81,17 @@ export default function MoviePage({
 
         if (response.ok) {
           const data = await response.json();
-          const resourceTrailerData = data.results.filter(
-            (trailer) => trailer.type === "Trailer"
-          );
-          const trailer = {
-            id: `${resourceId}`,
-            key: resourceTrailerData[0].key,
-          };
-          setResourceTrailer(trailer);
+          console.log(data);
+          if (data.results.length > 0) {
+            const resourceTrailerData = data.results.filter(
+              (trailer) => trailer.type === "Trailer"
+            );
+            const trailer = {
+              id: `${resourceId}`,
+              key: resourceTrailerData[0].key,
+            };
+            setResourceTrailer(trailer);
+          }
         }
       } catch (err) {
         console.log(err);
