@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import formatTMDBDate from "../utils/formatDate";
 
 export default function MovieCardL({
@@ -5,18 +6,27 @@ export default function MovieCardL({
   title,
   genre,
   releaseDate = "30 Aug 2024",
+  resourceType,
+  resourceId,
+  click,
 }) {
   return (
-    <div className="individual-show-preview-upcoming">
-      <div className="individual-show-preview-image">
-        <img src={imageSrc} alt="show image" loading="lazy"></img>
-      </div>
-      <h4 className="show-title">{title}</h4>
+    <Link
+      to={`/${resourceType}/${resourceId}`}
+      style={{ textDecoration: "none", color: "inherit" }}
+      className="link-div"
+    >
+      <div className="individual-show-preview-upcoming" onClick={click}>
+        <div className="individual-show-preview-image">
+          <img src={imageSrc} alt="show image" loading="lazy"></img>
+        </div>
+        <h4 className="show-title">{title}</h4>
 
-      <div className="movie-meta">
-        <h5 className="show-genre">{genre}</h5>
-        <h5 className="show-release-date">{formatTMDBDate(releaseDate)}</h5>
+        <div className="movie-meta">
+          <h5 className="show-genre">{genre}</h5>
+          <h5 className="show-release-date">{formatTMDBDate(releaseDate)}</h5>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 }

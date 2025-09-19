@@ -1,17 +1,22 @@
 import "../styles/home.css";
 import passwordImage from "../assets/password.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+
 import bell from "../assets/icons/bell.png";
 
-import { useState } from "react";
 import MovieCard from "../components/MovieCard";
 import MovieCardL from "../components/MovieCardL";
 import generatePoster from "../utils/generatePoster";
+import SearchBar from "../components/SearchBar";
 
-export default function Home({ resources, upcomingResoures }) {
-  const [searchActive, setSearchActive] = useState(false);
-
+export default function Home({
+  resources,
+  upcomingResoures,
+  searchActive,
+  setSearchActive,
+  searchResources,
+  setSearchResources,
+}) {
   return (
     <main aria-label="Home" className="home-page">
       <header className="profile-primary-header" role="header">
@@ -29,17 +34,12 @@ export default function Home({ resources, upcomingResoures }) {
           </div>
         </div>
         <div className="header-actions">
-          <form aria-label="search" className="header-search">
-            <div className="input-wrapper">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="fa" />
-              <input
-                type="search"
-                placeholder="Search"
-                onFocus={() => setSearchActive(true)}
-                onBlur={() => setSearchActive(false)}
-              />
-            </div>
-          </form>
+          <SearchBar
+            searchActive={searchActive}
+            setSearchActive={setSearchActive}
+            searchResources={searchResources}
+            setSearchResources={setSearchResources}
+          />
 
           {!searchActive && (
             <button>
@@ -109,6 +109,8 @@ export default function Home({ resources, upcomingResoures }) {
               title={upcomingResoure.title}
               genre={upcomingResoure.genre}
               releaseDate={upcomingResoure.date}
+              resourceId={upcomingResoure.id}
+              resourceType={upcomingResoure.type}
             />
           ))}
         </div>

@@ -7,6 +7,7 @@ import ForgotPasswordPage from "./pages/PasswordPage";
 import RegisterPage from "./pages/RegisterPage";
 import SignPage from "./pages/SignPage";
 import { Route, Routes } from "react-router-dom";
+import ResultsPage from "./pages/ResultsPage";
 
 const options = {
   method: "GET",
@@ -22,6 +23,8 @@ function App() {
   const [upcomingResoures, setUpcomingResources] = useState([]);
   const [genres, setGenres] = useState([]);
   const [isTrailerVisible, setIsTrailerVisible] = useState(false);
+  const [searchActive, setSearchActive] = useState(false);
+  const [searchResources, setSearchResources] = useState([]);
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -188,7 +191,14 @@ function App() {
         <Route
           path="/"
           element={
-            <Home resources={resources} upcomingResoures={upcomingResoures} />
+            <Home
+              resources={resources}
+              upcomingResoures={upcomingResoures}
+              searchActive={searchActive}
+              setSearchActive={setSearchActive}
+              searchResources={searchResources}
+              setSearchResources={setSearchResources}
+            />
           }
         ></Route>
         <Route
@@ -202,6 +212,8 @@ function App() {
             />
           }
         ></Route>
+        <Route path="/search" element={<ResultsPage />}></Route>
+        <Route path="*" element={<p>Page not found!</p>}></Route>
       </Routes>
     </>
   );

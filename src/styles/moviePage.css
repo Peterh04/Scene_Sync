@@ -80,6 +80,11 @@
 
   z-index: 150;
 }
+.show-image-container > iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
 
 .show-case-show > .show-details {
   display: flex;

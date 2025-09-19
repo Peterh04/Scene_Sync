@@ -48,9 +48,10 @@ export default function MoviePage({
           const resourceData = {
             id: data.id,
             title: data.title || data.name,
-            // date: data.release_date || data.release_date !=""
-            //   ? data.release_date.split("-")[0]
-            //   : data.first_air_date.split("-")[0],
+            // date:
+            //   data?.release_date || data?.release_date != ""
+            //     ? data?.release_date.split("-")[0]
+            //     : data?.first_air_date.split("-")[0],
             rating: Math.floor(data.vote_average),
             runtime:
               data.runtime || data.runtime == 0
