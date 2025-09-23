@@ -16,6 +16,8 @@ export default function Home({
   setSearchActive,
   searchResources,
   setSearchResources,
+  search,
+  setSearch,
 }) {
   return (
     <main aria-label="Home" className="home-page">
@@ -39,6 +41,8 @@ export default function Home({
             setSearchActive={setSearchActive}
             searchResources={searchResources}
             setSearchResources={setSearchResources}
+            search={search}
+            setSearch={setSearch}
           />
 
           {!searchActive && (

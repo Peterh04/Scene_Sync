@@ -1,16 +1,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useSearch } from "../context/SearchContext";
 
-export default function SearchBar({
-  searchActive,
-  setSearchActive,
-  searchResources,
-  setSearchResources,
-}) {
-  const [search, setSearch] = useState("");
-
+export default function SearchBar() {
+  const {
+    searchActive,
+    setSearchActive,
+    searchResources,
+    setSearchResources,
+    search,
+    setSearch,
+  } = useSearch();
   const handleSearch = (e) => {
     setSearch(e.target.value);
   };
@@ -75,10 +77,11 @@ export default function SearchBar({
         >
           {searchResources.slice(0, 5).map((resource) => (
             <Link
-              to={`/${resource.type}/${resource.id}`}
+              to={`/searchResult?keyword=${search}`}
               style={{ textDecoration: "none", color: "inherit" }}
               className="link-div"
               key={resource.id}
+              onClick={() => setSearchActive(false)}
             >
               <div className="search-suggestion">
                 <FontAwesomeIcon icon={faMagnifyingGlass} className="fa" />

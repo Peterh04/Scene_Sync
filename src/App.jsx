@@ -8,6 +8,7 @@ import RegisterPage from "./pages/RegisterPage";
 import SignPage from "./pages/SignPage";
 import { Route, Routes } from "react-router-dom";
 import ResultsPage from "./pages/ResultsPage";
+import { SearchProvider } from "./context/SearchContext";
 
 const options = {
   method: "GET",
@@ -23,8 +24,6 @@ function App() {
   const [upcomingResoures, setUpcomingResources] = useState([]);
   const [genres, setGenres] = useState([]);
   const [isTrailerVisible, setIsTrailerVisible] = useState(false);
-  const [searchActive, setSearchActive] = useState(false);
-  const [searchResources, setSearchResources] = useState([]);
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -187,34 +186,29 @@ function App() {
 
   return (
     <>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Home
-              resources={resources}
-              upcomingResoures={upcomingResoures}
-              searchActive={searchActive}
-              setSearchActive={setSearchActive}
-              searchResources={searchResources}
-              setSearchResources={setSearchResources}
-            />
-          }
-        ></Route>
-        <Route
-          path="/:resourceType/:resourceId"
-          element={
-            <MoviePage
-              genres={genres}
-              isTrailerVisible={isTrailerVisible}
-              playTrailer={playTrailer}
-              closeTrailer={closeTrailer}
-            />
-          }
-        ></Route>
-        <Route path="/search" element={<ResultsPage />}></Route>
-        <Route path="*" element={<p>Page not found!</p>}></Route>
-      </Routes>
+      <SearchProvider>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home resources={resources} upcomingResoures={upcomingResoures} />
+            }
+          ></Route>
+          <Route
+            path="/:resourceType/:resourceId"
+            element={
+              <MoviePage
+                genres={genres}
+                isTrailerVisible={isTrailerVisible}
+                playTrailer={playTrailer}
+                closeTrailer={closeTrailer}
+              />
+            }
+          ></Route>
+          <Route path="/searchResult" element={<ResultsPage />}></Route>
+          <Route path="*" element={<p>Page not found!</p>}></Route>
+        </Routes>
+      </SearchProvider>
     </>
   );
 }
