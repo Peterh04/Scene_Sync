@@ -9,6 +9,7 @@ import SignPage from "./pages/SignPage";
 import { Route, Routes } from "react-router-dom";
 import ResultsPage from "./pages/ResultsPage";
 import { SearchProvider } from "./context/SearchContext";
+import { SavedProvider } from "./context/SavedContext";
 
 const options = {
   method: "GET",
@@ -187,27 +188,32 @@ function App() {
   return (
     <>
       <SearchProvider>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home resources={resources} upcomingResoures={upcomingResoures} />
-            }
-          ></Route>
-          <Route
-            path="/:resourceType/:resourceId"
-            element={
-              <MoviePage
-                genres={genres}
-                isTrailerVisible={isTrailerVisible}
-                playTrailer={playTrailer}
-                closeTrailer={closeTrailer}
-              />
-            }
-          ></Route>
-          <Route path="/searchResult" element={<ResultsPage />}></Route>
-          <Route path="*" element={<p>Page not found!</p>}></Route>
-        </Routes>
+        <SavedProvider>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  resources={resources}
+                  upcomingResoures={upcomingResoures}
+                />
+              }
+            ></Route>
+            <Route
+              path="/:resourceType/:resourceId"
+              element={
+                <MoviePage
+                  genres={genres}
+                  isTrailerVisible={isTrailerVisible}
+                  playTrailer={playTrailer}
+                  closeTrailer={closeTrailer}
+                />
+              }
+            ></Route>
+            <Route path="/searchResult" element={<ResultsPage />}></Route>
+            <Route path="*" element={<p>Page not found!</p>}></Route>
+          </Routes>
+        </SavedProvider>
       </SearchProvider>
     </>
   );

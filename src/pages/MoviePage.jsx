@@ -14,6 +14,7 @@ import generatePoster from "../utils/generatePoster";
 import generateTimestamps from "../utils/generateTimestamps";
 import generateTrailer from "../utils/generateTrailer";
 import sharePage from "../utils/share";
+import { useSaved } from "../context/SavedContext";
 
 export default function MoviePage({
   genres,
@@ -25,6 +26,31 @@ export default function MoviePage({
   const [resource, setResource] = useState([]);
   const [resourceTrailer, setResourceTrailer] = useState([]);
   const [similarResource, setSimilarResource] = useState([]);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isAminate, setIsAminate] = useState(false);
+
+  const { savedResources, saveResource, removeResource, isApproved } =
+    useSaved();
+
+  const handleBookMark = (resource) => {
+    // setIsBookmarked((cond) => !cond);
+    // setIsAminate(true);
+
+    // saveResource(resource);
+    // console.log(savedResources);
+
+    // setTimeout(() => setIsAminate(false), 200);
+
+    if (!isApproved(resource.id)) {
+      setIsAminate(true);
+      saveResource(resource);
+      setTimeout(() => setIsAminate(false), 200);
+      console.log("booked");
+    } else {
+      removeResource(resource.id);
+      console.log("unbooked");
+    }
+  };
 
   const url = `https://api.themoviedb.org/3/${resourceType}/${resourceId}`;
   const videoUrl = `https://api.themoviedb.org/3/${resourceType}/${resourceId}/videos`;
@@ -143,8 +169,16 @@ export default function MoviePage({
         </Link>
 
         <div className="header-actions">
-          <button role="button" className="bookmarKBtn">
-            <img src={bookmark} alt="bookmark"></img>
+          <button
+            role="button"
+            className="bookmarkBtn"
+            onClick={() => handleBookMark(resource)}
+          >
+            <img
+              className={isAminate ? "animated" : ""}
+              src={isApproved(resource.id) ? fillBookmark : bookmark}
+              alt="bookmark"
+            ></img>
           </button>
 
           <button role="button" className="shareBtn">

@@ -8,6 +8,7 @@ import MovieCard from "../components/MovieCard";
 import MovieCardL from "../components/MovieCardL";
 import generatePoster from "../utils/generatePoster";
 import SearchBar from "../components/SearchBar";
+import Navbar from "../components/Navbar";
 
 export default function Home({
   resources,
@@ -120,9 +121,7 @@ export default function Home({
         </div>
       </section>
 
-      <footer className="home-footer" role="footer">
-        <div className="nav-item"></div>
-      </footer>
+      <Navbar />
     </main>
   );
 }

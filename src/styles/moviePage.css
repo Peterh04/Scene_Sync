@@ -202,3 +202,12 @@
 
   padding-left: 1rem;
 }
+
+.bookmarkBtn img {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.bookmarkBtn img.animated {
+  transform: scale(1.2);
+  opacity: 0.8;
+}
