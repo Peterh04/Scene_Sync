@@ -10,6 +10,7 @@ import { Route, Routes } from "react-router-dom";
 import ResultsPage from "./pages/ResultsPage";
 import { SearchProvider } from "./context/SearchContext";
 import { SavedProvider } from "./context/SavedContext";
+import SavedPage from "./pages/SavedPage";
 
 const options = {
   method: "GET",
@@ -211,6 +212,7 @@ function App() {
               }
             ></Route>
             <Route path="/searchResult" element={<ResultsPage />}></Route>
+            <Route path="/saved" element={<SavedPage />}></Route>
             <Route path="*" element={<p>Page not found!</p>}></Route>
           </Routes>
         </SavedProvider>

@@ -1,0 +1,22 @@
+.save-page {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100vh;
+
+  padding: 0.625rem;
+
+  position: relative;
+
+  overflow-x: scroll;
+
+  gap: 1rem;
+}
+
+.resources-preview {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 26px;
+  margin-left: 20px;
+}

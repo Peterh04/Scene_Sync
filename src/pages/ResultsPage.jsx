@@ -6,8 +6,6 @@ import "../styles/resultsPage.css";
 import generatePoster from "../utils/generatePoster";
 import { useLocation } from "react-router-dom";
 
-useLocation;
-
 export default function ResultsPage() {
   const [results, setResults] = useState([]);
   const location = useLocation();

@@ -86,6 +86,7 @@ export default function MoviePage({
             poster: data.poster_path,
 
             genre: data.genres.length > 0 ? data.genres : null,
+            type: resourceType,
             overview: data.overview,
           };
 

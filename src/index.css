@@ -92,6 +92,11 @@ h6 {
   isolation: isolate;
 }
 
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+
 body {
   display: flex;
   flex-direction: column;
